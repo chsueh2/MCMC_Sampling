@@ -150,7 +150,7 @@ In this work, we are interested to model the response `Outcome` by `Glucose` wit
 
 $$Y=\log\frac{P(success)}{1-P(success)}=\beta_0+\beta_1 X$$
 
-The likelihood (data) is a product of binomial pdf and the prior distributions for the parameters $\beta_0$ and $\betat_1$ are chosen to be two independent normal distributions $\sim(0, 15^2)$:
+The likelihood (data) is a product of binomial pdf and the prior distributions for the parameters $\beta_0$ and $\beta_1$ are chosen to be two independent normal distributions $\sim(0, 15^2)$:
 
 
 $$
@@ -390,7 +390,7 @@ The estimates are close to what we obtained using MCMC-MH. Both methods have sim
 
 ## Additional Study - MCMC MH Bivariate Manner
 
-With the assumption of the independence of the two parameters $\beta_0$ and $\beta_0$, we can perform the sampling process in bivariate manner:
+With the assumption of the independence of the two parameters $\beta_0$ and $\beta_1$, we can perform the sampling process in bivariate manner:
 
 ```{r}
 # MCMC MH sampler - bivariate manner

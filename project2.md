@@ -1,7 +1,7 @@
 MCMC Sampling for a Logistic Regression Model
 ================
 Chien-Lan Hsueh
-2022-10-22
+2023-11-10
 
 - [Packages](#packages)
 - [Data](#data)
@@ -54,40 +54,7 @@ pacman::p_load(
     broom, 
     TeachingDemos
 )
-```
 
-    ## Installing package into 'C:/Users/clh82/AppData/Local/R/win-library/4.3'
-    ## (as 'lib' is unspecified)
-
-    ## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.3:
-    ##   cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.3/PACKAGES'
-
-    ## package 'cumstats' successfully unpacked and MD5 sums checked
-    ## 
-    ## The downloaded binary packages are in
-    ##  C:\Users\clh82\AppData\Local\Temp\Rtmp0kpETn\downloaded_packages
-
-    ## 
-    ## cumstats installed
-
-    ## Installing package into 'C:/Users/clh82/AppData/Local/R/win-library/4.3'
-    ## (as 'lib' is unspecified)
-
-    ## also installing the dependency 'repr'
-
-    ## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.3:
-    ##   cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.3/PACKAGES'
-
-    ## package 'repr' successfully unpacked and MD5 sums checked
-    ## package 'skimr' successfully unpacked and MD5 sums checked
-    ## 
-    ## The downloaded binary packages are in
-    ##  C:\Users\clh82\AppData\Local\Temp\Rtmp0kpETn\downloaded_packages
-
-    ## 
-    ## skimr installed
-
-``` r
 # helper function: string concatenation (ex: "act" %&% "5")
 '%&%' <- function(x, y) paste0(x, y)
 
@@ -230,7 +197,7 @@ In this work, we are interested to model the response `Outcome` by
 $$Y=\log\frac{P(success)}{1-P(success)}=\beta_0+\beta_1 X$$
 
 The likelihood (data) is a product of binomial pdf and the prior
-distributions for the parameters $\beta_0$ and $\betat_1$ are chosen to
+distributions for the parameters $\beta_0$ and $\beta_1$ are chosen to
 be two independent normal distributions $\sim(0, 15^2)$:
 
 $$
@@ -528,7 +495,7 @@ df_glm
 <div data-pagedtable="false">
 
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["proc_time"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-5.25436192","3":"0.257280657","4":"-20.42269","5":"1.051237e-92","6":"-5.76761651","7":"-4.75867254","8":"0.02"},{"1":"Glucose","2":"0.03669568","3":"0.001972784","4":"18.60097","5":"3.155756e-77","6":"0.03289289","7":"0.04062958","8":"0.02"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["proc_time"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-5.25436192","3":"0.257280657","4":"-20.42269","5":"1.051237e-92","6":"-5.76761651","7":"-4.75867254","8":"0"},{"1":"Glucose","2":"0.03669568","3":"0.001972784","4":"18.60097","5":"3.155756e-77","6":"0.03289289","7":"0.04062958","8":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 
 </div>
@@ -540,7 +507,7 @@ difference is the computation time: MCMC takes much longer to execute.
 ## Additional Study - MCMC MH Bivariate Manner
 
 With the assumption of the independence of the two parameters $\beta_0$
-and $\beta_0$, we can perform the sampling process in bivariate manner:
+and $\beta_1$, we can perform the sampling process in bivariate manner:
 
 ``` r
 # MCMC MH sampler - bivariate manner
@@ -697,7 +664,7 @@ bind_rows(
 <div data-pagedtable="false">
 
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["method"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CI_2.5%"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["CI_97.5%"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["CI_width"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["proc_time"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["acceptance_rate"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"beta0","2":"MLE","3":"-5.2544","4":"NA","5":"0.2573","6":"-5.7676","7":"-4.7587","8":"1.0089","9":"0.02","10":"NA"},{"1":"beta0","2":"MCMC_MH_univar","3":"NA","4":"-5.2108","5":"0.2550","6":"-5.6972","7":"-4.6921","8":"1.0051","9":"172.92","10":"0.6878"},{"1":"beta0","2":"MCMC_MH_bivar","3":"NA","4":"-5.2427","5":"0.2441","6":"-5.6235","7":"-4.7387","8":"0.8848","9":"148.40","10":"0.4332"},{"1":"beta1","2":"MLE","3":"0.0367","4":"NA","5":"0.0020","6":"0.0329","7":"0.0406","8":"0.0077","9":"0.02","10":"NA"},{"1":"beta1","2":"MCMC_MH_univar","3":"NA","4":"0.0363","5":"0.0020","6":"0.0324","7":"0.0401","8":"0.0077","9":"172.92","10":"0.6878"},{"1":"beta1","2":"MCMC_MH_bivar","3":"NA","4":"0.0366","5":"0.0019","6":"0.0327","7":"0.0396","8":"0.0069","9":"148.40","10":"0.4332"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["method"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CI_2.5%"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["CI_97.5%"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["CI_width"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["proc_time"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["acceptance_rate"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"beta0","2":"MLE","3":"-5.2544","4":"NA","5":"0.2573","6":"-5.7676","7":"-4.7587","8":"1.0089","9":"0.00","10":"NA"},{"1":"beta0","2":"MCMC_MH_univar","3":"NA","4":"-5.2108","5":"0.2550","6":"-5.6972","7":"-4.6921","8":"1.0051","9":"172.92","10":"0.6878"},{"1":"beta0","2":"MCMC_MH_bivar","3":"NA","4":"-5.2427","5":"0.2441","6":"-5.6235","7":"-4.7387","8":"0.8848","9":"148.40","10":"0.4332"},{"1":"beta1","2":"MLE","3":"0.0367","4":"NA","5":"0.0020","6":"0.0329","7":"0.0406","8":"0.0077","9":"0.00","10":"NA"},{"1":"beta1","2":"MCMC_MH_univar","3":"NA","4":"0.0363","5":"0.0020","6":"0.0324","7":"0.0401","8":"0.0077","9":"172.92","10":"0.6878"},{"1":"beta1","2":"MCMC_MH_bivar","3":"NA","4":"0.0366","5":"0.0019","6":"0.0327","7":"0.0396","8":"0.0069","9":"148.40","10":"0.4332"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 
 </div>
