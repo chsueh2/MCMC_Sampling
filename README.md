@@ -16,7 +16,7 @@ Key features:
 
 The analysis results with all theoretical backgrounds and math derivations are included in the [project report](./project2.md) ([R Markdown](./project2.Rmd)).
 
-Original Completion Date: Tuesday, October 22, 2022
+Original Completion Date: October 22, 2022
 
 Author: Chien-Lan Hsueh (chienlan.hsueh at gmail.com)
 
@@ -24,7 +24,7 @@ Author: Chien-Lan Hsueh (chienlan.hsueh at gmail.com)
 
 Suppose we have independent observations of success or failure. We can use MLE to conduct an inference on $p$. Since the MLEs do not have a closed form solution, we will try to solve using MCMC sampling by allowing for $\beta_0$ and $\beta_1$ to each have normal distribution priors. With the $R$ ratio and the jumping distribution, we implement a MCMC sampler to obtain posterior distributions for the parameters as well as the posterior statistics and their credible intervals. 
 
-Finally, Improve the MCMC algorithm and compare the burn-in (MCMC MH Bivariate Manner).
+Finally, improve the MCMC algorithm and compare the burn-in (MCMC MH Bivariate Manner).
 
 ## Part 1 - Load and Summarize Data
 
