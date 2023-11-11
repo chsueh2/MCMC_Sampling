@@ -56,16 +56,16 @@ pacman::p_load(
 
 In this work, we reuse one of the helper function we developed before `dist_summary`. It conveniently gives graphical (histogram) and numeric summaries (mean, median, standard deviation and confidence intervals) of a distribution from a vector. In this updated version, we add the credible intervals by using `TeachingDemos::CI_hpd()`.
 
-Arguments:
-
-- `x`: A numeric vector
-- `var_expression`: expression used in plot axis label
-- `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
-- `conf.level`: confidence level
-- `digits`: number of decimal places
-- `plot`: include plot or not
-
-Value: A data frame with numeric summaries
+> Arguments:
+>
+> - `x`: A numeric vector
+> - `var_expression`: expression used in plot axis label
+> - `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
+> - `conf.level`: confidence level
+> - `digits`: number of decimal places
+> - `plot`: include plot or not
+>
+> Returned Value: A data frame with numeric summaries
 
 ```{r}
 # summarize a distribution (graphically and numerically)
@@ -198,16 +198,16 @@ Next we define a sampler function to carry out Markov Chain Monte Carlo (MCMC) M
 - if only one is accepted, `accept = 0.5` (50% acceptance)
 - if none is accepted, `accept = 0`
 
-Arguments:
-
-- `Y`, `X`: response and prediction variables
-- `N`: number of MCMC iteration
-- `beta0_init` and `beta0_init`: initial values of the parameters
-- `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
-- `proposed_sd0` and `proposed_sd1`: standard deviation of jumping distribution for parameter candidates
-- `seed`: seed for random number generator
-
-Value: A data frame with all sampled values of the parameters, process time and acceptance indicator
+> Arguments:
+> 
+> - `Y`, `X`: response and prediction variables
+> - `N`: number of MCMC iteration
+> - `beta0_init` and `beta0_init`: initial values of the parameters
+> - `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
+> - `proposed_sd0` and `proposed_sd1`: standard deviation of jumping distribution for parameter candidates
+> - `seed`: seed for random number generator
+>
+> Returned Value: A data frame with all sampled values of the parameters, process time and acceptance indicator
 
 ```{r}
 # MCMC MH sampler - univariate manner
@@ -290,12 +290,12 @@ mcmc_mh <- function(
 
 The following helper function is to summarized sampled values returned by MCMC sampler function. It creates several plots to show how algorithm is executed (steps, process time and acceptance rate) as well as a summary report on obtained beta values (posterior mean, median and credible intervals):
 
-Arguments:
-
-- `df`: a data frame with all sampled values
-- `burn_in`: number of burn_in iteration to remove
-
-Value: A data frame with posterior mean, median and credible intervals
+> Arguments:
+>
+> - `df`: a data frame with all sampled values
+> - `burn_in`: number of burn_in iteration to remove
+>
+> Returned Value: A data frame with posterior mean, median and credible intervals
 
 ```{r}
 mcmc_summary <- function(df, burn_in, ...){

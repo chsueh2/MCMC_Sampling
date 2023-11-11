@@ -68,16 +68,16 @@ summaries (mean, median, standard deviation and confidence intervals) of
 a distribution from a vector. In this updated version, we add the
 credible intervals by using `TeachingDemos::CI_hpd()`.
 
-Arguments:
-
-- `x`: A numeric vector
-- `var_expression`: expression used in plot axis label
-- `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
-- `conf.level`: confidence level
-- `digits`: number of decimal places
-- `plot`: include plot or not
-
-Value: A data frame with numeric summaries
+> Arguments:
+>
+> - `x`: A numeric vector
+> - `var_expression`: expression used in plot axis label
+> - `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
+> - `conf.level`: confidence level
+> - `digits`: number of decimal places
+> - `plot`: include plot or not
+>
+> Returned Value: A data frame with numeric summaries
 
 ``` r
 # summarize a distribution (graphically and numerically)
@@ -251,18 +251,18 @@ of the process time `proc_time` and if a proposed candidate is accepted
 - if only one is accepted, `accept = 0.5` (50% acceptance)
 - if none is accepted, `accept = 0`
 
-Arguments:
-
-- `Y`, `X`: response and prediction variables
-- `N`: number of MCMC iteration
-- `beta0_init` and `beta0_init`: initial values of the parameters
-- `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
-- `proposed_sd0` and `proposed_sd1`: standard deviation of jumping
-  distribution for parameter candidates
-- `seed`: seed for random number generator
-
-Value: A data frame with all sampled values of the parameters, process
-time and acceptance indicator
+> Arguments:
+>
+> - `Y`, `X`: response and prediction variables
+> - `N`: number of MCMC iteration
+> - `beta0_init` and `beta0_init`: initial values of the parameters
+> - `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
+> - `proposed_sd0` and `proposed_sd1`: standard deviation of jumping
+>   distribution for parameter candidates
+> - `seed`: seed for random number generator
+>
+> Returned Value: A data frame with all sampled values of the
+> parameters, process time and acceptance indicator
 
 ``` r
 # MCMC MH sampler - univariate manner
@@ -349,12 +349,13 @@ is executed (steps, process time and acceptance rate) as well as a
 summary report on obtained beta values (posterior mean, median and
 credible intervals):
 
-Arguments:
-
-- `df`: a data frame with all sampled values
-- `burn_in`: number of burn_in iteration to remove
-
-Value: A data frame with posterior mean, median and credible intervals
+> Arguments:
+>
+> - `df`: a data frame with all sampled values
+> - `burn_in`: number of burn_in iteration to remove
+>
+> Returned Value: A data frame with posterior mean, median and credible
+> intervals
 
 ``` r
 mcmc_summary <- function(df, burn_in, ...){
@@ -495,8 +496,8 @@ df_glm
 
 | term        |   estimate | std.error | statistic | p.value |   conf.low |  conf.high | proc_time |
 |:------------|-----------:|----------:|----------:|--------:|-----------:|-----------:|----------:|
-| (Intercept) | -5.2543619 | 0.2572807 | -20.42269 |       0 | -5.7676165 | -4.7586725 |         0 |
-| Glucose     |  0.0366957 | 0.0019728 |  18.60096 |       0 |  0.0328929 |  0.0406296 |         0 |
+| (Intercept) | -5.2543619 | 0.2572807 | -20.42269 |       0 | -5.7676165 | -4.7586725 |      0.01 |
+| Glucose     |  0.0366957 | 0.0019728 |  18.60096 |       0 |  0.0328929 |  0.0406296 |      0.01 |
 
 </div>
 
@@ -666,10 +667,10 @@ bind_rows(
 
 | term  | method         | estimate |  median |     sd | CI_2.5% | CI_97.5% | CI_width | proc_time | acceptance_rate |
 |:------|:---------------|---------:|--------:|-------:|--------:|---------:|---------:|----------:|----------------:|
-| beta0 | MLE            |  -5.2544 |      NA | 0.2573 | -5.7676 |  -4.7587 |   1.0089 |      0.00 |              NA |
+| beta0 | MLE            |  -5.2544 |      NA | 0.2573 | -5.7676 |  -4.7587 |   1.0089 |      0.01 |              NA |
 | beta0 | MCMC_MH_univar |       NA | -5.2108 | 0.2550 | -5.6972 |  -4.6921 |   1.0051 |    187.65 |          0.6878 |
 | beta0 | MCMC_MH_bivar  |       NA | -5.2427 | 0.2441 | -5.6235 |  -4.7387 |   0.8848 |    149.25 |          0.4332 |
-| beta1 | MLE            |   0.0367 |      NA | 0.0020 |  0.0329 |   0.0406 |   0.0077 |      0.00 |              NA |
+| beta1 | MLE            |   0.0367 |      NA | 0.0020 |  0.0329 |   0.0406 |   0.0077 |      0.01 |              NA |
 | beta1 | MCMC_MH_univar |       NA |  0.0363 | 0.0020 |  0.0324 |   0.0401 |   0.0077 |    187.65 |          0.6878 |
 | beta1 | MCMC_MH_bivar  |       NA |  0.0366 | 0.0019 |  0.0327 |   0.0396 |   0.0069 |    149.25 |          0.4332 |
 
