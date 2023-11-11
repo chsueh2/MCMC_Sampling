@@ -426,24 +426,25 @@ df_univar <- mcmc_mh(
 ```
 
     ## Last values: (beta0, beta1) = (-5.52522334113172, 0.0390173084051903)
-    ## Process time [s]: 168.18
+    ## Process time [s]: 187.65
     ## Acceptance rate: 0.68779
 
 ![](project2_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->![](project2_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
 ``` r
-df_univar %>% print()
+df_univar
 ```
 
-    ## # A tibble: 2 × 10
-    ##   term     mean  median      sd `CI_2.5%` `CI_97.5%` `CI_hpd_2.5%`
-    ##   <chr>   <dbl>   <dbl>   <dbl>     <dbl>      <dbl>         <dbl>
-    ## 1 beta0 -5.20   -5.21   0.255     -5.70      -4.69         -5.75  
-    ## 2 beta1  0.0363  0.0363 0.00196    0.0324     0.0401        0.0327
-    ## # ℹ 3 more variables: `CI_hpd_97.5%` <dbl>, proc_time <dbl>,
-    ## #   acceptance_rate <dbl>
+<div class="kable-table">
 
-MCMC takes 168.18 seconds to complete 10^{5} iteration in univariate
+| term  |       mean |     median |        sd |    CI_2.5% |   CI_97.5% | CI_hpd_2.5% | CI_hpd_97.5% | proc_time | acceptance_rate |
+|:------|-----------:|-----------:|----------:|-----------:|-----------:|------------:|-------------:|----------:|----------------:|
+| beta0 | -5.1960801 | -5.2108115 | 0.2549691 | -5.6972460 | -4.6921111 |  -5.7505870 |   -4.7505961 |    187.65 |         0.68779 |
+| beta1 |  0.0362593 |  0.0363456 | 0.0019601 |  0.0324064 |  0.0401056 |   0.0327338 |    0.0403568 |    187.65 |         0.68779 |
+
+</div>
+
+MCMC takes 187.65 seconds to complete 10^{5} iteration in univariate
 manner. On average, the acceptance rate of candidates drawn from the
 jumping distributions is 0.68779.
 
@@ -487,14 +488,17 @@ summary(fit)
 df_glm <- tidy(fit, conf.int = T) %>% 
   mutate(proc_time = proc_time["elapsed"])
 
-df_glm %>% print()
+df_glm
 ```
 
-    ## # A tibble: 2 × 8
-    ##   term        estimate std.error statistic  p.value conf.low conf.high proc_time
-    ##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
-    ## 1 (Intercept)  -5.25     0.257       -20.4 1.05e-92  -5.77     -4.76      0.0200
-    ## 2 Glucose       0.0367   0.00197      18.6 3.16e-77   0.0329    0.0406    0.0200
+<div class="kable-table">
+
+| term        |   estimate | std.error | statistic | p.value |   conf.low |  conf.high | proc_time |
+|:------------|-----------:|----------:|----------:|--------:|-----------:|-----------:|----------:|
+| (Intercept) | -5.2543619 | 0.2572807 | -20.42269 |       0 | -5.7676165 | -4.7586725 |      0.01 |
+| Glucose     |  0.0366957 | 0.0019728 |  18.60096 |       0 |  0.0328929 |  0.0406296 |      0.01 |
+
+</div>
 
 The estimates are close to what we obtained using MCMC-MH. Both methods
 have similar standard deviations and CIs on the parameters. The major
@@ -587,24 +591,25 @@ df_bivar <- mcmc_mh2(
 ```
 
     ## Last values: (beta0, beta1) = (-4.95027052778182, 0.0346536657845713)
-    ## Process time [s]: 147.29
+    ## Process time [s]: 149.25
     ## Acceptance rate: 0.43319
 
 ![](project2_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->![](project2_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 ``` r
-df_bivar %>% print()
+df_bivar
 ```
 
-    ## # A tibble: 2 × 10
-    ##   term     mean  median      sd `CI_2.5%` `CI_97.5%` `CI_hpd_2.5%`
-    ##   <chr>   <dbl>   <dbl>   <dbl>     <dbl>      <dbl>         <dbl>
-    ## 1 beta0 -5.21   -5.24   0.244     -5.62      -4.74         -5.62  
-    ## 2 beta1  0.0364  0.0366 0.00187    0.0327     0.0396        0.0327
-    ## # ℹ 3 more variables: `CI_hpd_97.5%` <dbl>, proc_time <dbl>,
-    ## #   acceptance_rate <dbl>
+<div class="kable-table">
 
-MCMC takes 147.29 seconds to complete 10^{5} iteration in bivariate
+| term  |       mean |     median |        sd |    CI_2.5% |  CI_97.5% | CI_hpd_2.5% | CI_hpd_97.5% | proc_time | acceptance_rate |
+|:------|-----------:|-----------:|----------:|-----------:|----------:|------------:|-------------:|----------:|----------------:|
+| beta0 | -5.2086552 | -5.2426784 | 0.2441072 | -5.6234894 | -4.738681 |   -5.618165 |    -4.734866 |    149.25 |         0.43319 |
+| beta1 |  0.0363547 |  0.0365767 | 0.0018748 |  0.0326706 |  0.039571 |    0.032736 |     0.039622 |    149.25 |         0.43319 |
+
+</div>
+
+MCMC takes 149.25 seconds to complete 10^{5} iteration in bivariate
 manner. On average, the acceptance rate of candidates drawn from the
 jumping distributions is 0.43319, which is lower than the univariate
 counterpart. This is likely due to the fact that we propose two new
@@ -621,8 +626,8 @@ glue(
 ```
 
     ## Process Time Wasted [s] := Process Time * (1 - Acceptance Rate)
-    ## MCMC-MH univariate: 52.51 [s]
-    ## MCMC-MH bivariate:  83.49 [s]
+    ## MCMC-MH univariate: 58.59 [s]
+    ## MCMC-MH bivariate:  84.6 [s]
 
 Beside this downside, the results are slightly better in term of smaller
 standard deviation and narrower CI.
@@ -661,12 +666,12 @@ bind_rows(
 
 | term  | method         | estimate |  median |     sd | CI_2.5% | CI_97.5% | CI_width | proc_time | acceptance_rate |
 |:------|:---------------|---------:|--------:|-------:|--------:|---------:|---------:|----------:|----------------:|
-| beta0 | MLE            |  -5.2544 |      NA | 0.2573 | -5.7676 |  -4.7587 |   1.0089 |      0.02 |              NA |
-| beta0 | MCMC_MH_univar |       NA | -5.2108 | 0.2550 | -5.6972 |  -4.6921 |   1.0051 |    168.18 |          0.6878 |
-| beta0 | MCMC_MH_bivar  |       NA | -5.2427 | 0.2441 | -5.6235 |  -4.7387 |   0.8848 |    147.29 |          0.4332 |
-| beta1 | MLE            |   0.0367 |      NA | 0.0020 |  0.0329 |   0.0406 |   0.0077 |      0.02 |              NA |
-| beta1 | MCMC_MH_univar |       NA |  0.0363 | 0.0020 |  0.0324 |   0.0401 |   0.0077 |    168.18 |          0.6878 |
-| beta1 | MCMC_MH_bivar  |       NA |  0.0366 | 0.0019 |  0.0327 |   0.0396 |   0.0069 |    147.29 |          0.4332 |
+| beta0 | MLE            |  -5.2544 |      NA | 0.2573 | -5.7676 |  -4.7587 |   1.0089 |      0.01 |              NA |
+| beta0 | MCMC_MH_univar |       NA | -5.2108 | 0.2550 | -5.6972 |  -4.6921 |   1.0051 |    187.65 |          0.6878 |
+| beta0 | MCMC_MH_bivar  |       NA | -5.2427 | 0.2441 | -5.6235 |  -4.7387 |   0.8848 |    149.25 |          0.4332 |
+| beta1 | MLE            |   0.0367 |      NA | 0.0020 |  0.0329 |   0.0406 |   0.0077 |      0.01 |              NA |
+| beta1 | MCMC_MH_univar |       NA |  0.0363 | 0.0020 |  0.0324 |   0.0401 |   0.0077 |    187.65 |          0.6878 |
+| beta1 | MCMC_MH_bivar  |       NA |  0.0366 | 0.0019 |  0.0327 |   0.0396 |   0.0069 |    149.25 |          0.4332 |
 
 </div>
 
