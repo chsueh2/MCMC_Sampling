@@ -426,24 +426,24 @@ df_univar <- mcmc_mh(
 ```
 
     ## Last values: (beta0, beta1) = (-5.52522334113172, 0.0390173084051903)
-    ## Process time [s]: 172.92
+    ## Process time [s]: 168.18
     ## Acceptance rate: 0.68779
 
 ![](project2_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->![](project2_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
 ``` r
-df_univar
+df_univar %>% print()
 ```
 
-<div data-pagedtable="false">
+    ## # A tibble: 2 × 10
+    ##   term     mean  median      sd `CI_2.5%` `CI_97.5%` `CI_hpd_2.5%`
+    ##   <chr>   <dbl>   <dbl>   <dbl>     <dbl>      <dbl>         <dbl>
+    ## 1 beta0 -5.20   -5.21   0.255     -5.70      -4.69         -5.75  
+    ## 2 beta1  0.0363  0.0363 0.00196    0.0324     0.0401        0.0327
+    ## # ℹ 3 more variables: `CI_hpd_97.5%` <dbl>, proc_time <dbl>,
+    ## #   acceptance_rate <dbl>
 
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["CI_2.5%"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CI_97.5%"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["CI_hpd_2.5%"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["CI_hpd_97.5%"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["proc_time"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["acceptance_rate"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"beta0","2":"-5.19608010","3":"-5.21081154","4":"0.254969140","5":"-5.69724600","6":"-4.69211109","7":"-5.75058703","8":"-4.75059605","9":"172.92","10":"0.68779"},{"1":"beta1","2":"0.03625927","3":"0.03634556","4":"0.001960118","5":"0.03240641","6":"0.04010558","7":"0.03273384","8":"0.04035683","9":"172.92","10":"0.68779"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
-
-MCMC takes 172.92 seconds to complete 10^{5} iteration in univariate
+MCMC takes 168.18 seconds to complete 10^{5} iteration in univariate
 manner. On average, the acceptance rate of candidates drawn from the
 jumping distributions is 0.68779.
 
@@ -487,16 +487,14 @@ summary(fit)
 df_glm <- tidy(fit, conf.int = T) %>% 
   mutate(proc_time = proc_time["elapsed"])
 
-df_glm
+df_glm %>% print()
 ```
 
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["proc_time"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-5.25436192","3":"0.257280657","4":"-20.42269","5":"1.051237e-92","6":"-5.76761651","7":"-4.75867254","8":"0.02"},{"1":"Glucose","2":"0.03669568","3":"0.001972784","4":"18.60097","5":"3.155756e-77","6":"0.03289289","7":"0.04062958","8":"0.02"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
+    ## # A tibble: 2 × 8
+    ##   term        estimate std.error statistic  p.value conf.low conf.high proc_time
+    ##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
+    ## 1 (Intercept)  -5.25     0.257       -20.4 1.05e-92  -5.77     -4.76      0.0200
+    ## 2 Glucose       0.0367   0.00197      18.6 3.16e-77   0.0329    0.0406    0.0200
 
 The estimates are close to what we obtained using MCMC-MH. Both methods
 have similar standard deviations and CIs on the parameters. The major
@@ -589,24 +587,24 @@ df_bivar <- mcmc_mh2(
 ```
 
     ## Last values: (beta0, beta1) = (-4.95027052778182, 0.0346536657845713)
-    ## Process time [s]: 148.4
+    ## Process time [s]: 147.29
     ## Acceptance rate: 0.43319
 
 ![](project2_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->![](project2_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 ``` r
-df_bivar
+df_bivar %>% print()
 ```
 
-<div data-pagedtable="false">
+    ## # A tibble: 2 × 10
+    ##   term     mean  median      sd `CI_2.5%` `CI_97.5%` `CI_hpd_2.5%`
+    ##   <chr>   <dbl>   <dbl>   <dbl>     <dbl>      <dbl>         <dbl>
+    ## 1 beta0 -5.21   -5.24   0.244     -5.62      -4.74         -5.62  
+    ## 2 beta1  0.0364  0.0366 0.00187    0.0327     0.0396        0.0327
+    ## # ℹ 3 more variables: `CI_hpd_97.5%` <dbl>, proc_time <dbl>,
+    ## #   acceptance_rate <dbl>
 
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["CI_2.5%"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CI_97.5%"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["CI_hpd_2.5%"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["CI_hpd_97.5%"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["proc_time"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["acceptance_rate"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"beta0","2":"-5.20865518","3":"-5.24267841","4":"0.244107244","5":"-5.62348944","6":"-4.73868090","7":"-5.61816491","8":"-4.73486578","9":"148.4","10":"0.43319"},{"1":"beta1","2":"0.03635475","3":"0.03657665","4":"0.001874828","5":"0.03267056","6":"0.03957097","7":"0.03273599","8":"0.03962204","9":"148.4","10":"0.43319"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
-
-MCMC takes 148.4 seconds to complete 10^{5} iteration in bivariate
+MCMC takes 147.29 seconds to complete 10^{5} iteration in bivariate
 manner. On average, the acceptance rate of candidates drawn from the
 jumping distributions is 0.43319, which is lower than the univariate
 counterpart. This is likely due to the fact that we propose two new
@@ -623,8 +621,8 @@ glue(
 ```
 
     ## Process Time Wasted [s] := Process Time * (1 - Acceptance Rate)
-    ## MCMC-MH univariate: 53.99 [s]
-    ## MCMC-MH bivariate:  84.11 [s]
+    ## MCMC-MH univariate: 52.51 [s]
+    ## MCMC-MH bivariate:  83.49 [s]
 
 Beside this downside, the results are slightly better in term of smaller
 standard deviation and narrower CI.
@@ -659,11 +657,16 @@ bind_rows(
   arrange(term)
 ```
 
-<div data-pagedtable="false">
+<div class="kable-table">
 
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["method"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CI_2.5%"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["CI_97.5%"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["CI_width"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["proc_time"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["acceptance_rate"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"beta0","2":"MLE","3":"-5.2544","4":"NA","5":"0.2573","6":"-5.7676","7":"-4.7587","8":"1.0089","9":"0.02","10":"NA"},{"1":"beta0","2":"MCMC_MH_univar","3":"NA","4":"-5.2108","5":"0.2550","6":"-5.6972","7":"-4.6921","8":"1.0051","9":"172.92","10":"0.6878"},{"1":"beta0","2":"MCMC_MH_bivar","3":"NA","4":"-5.2427","5":"0.2441","6":"-5.6235","7":"-4.7387","8":"0.8848","9":"148.40","10":"0.4332"},{"1":"beta1","2":"MLE","3":"0.0367","4":"NA","5":"0.0020","6":"0.0329","7":"0.0406","8":"0.0077","9":"0.02","10":"NA"},{"1":"beta1","2":"MCMC_MH_univar","3":"NA","4":"0.0363","5":"0.0020","6":"0.0324","7":"0.0401","8":"0.0077","9":"172.92","10":"0.6878"},{"1":"beta1","2":"MCMC_MH_bivar","3":"NA","4":"0.0366","5":"0.0019","6":"0.0327","7":"0.0396","8":"0.0069","9":"148.40","10":"0.4332"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
+| term  | method         | estimate |  median |     sd | CI_2.5% | CI_97.5% | CI_width | proc_time | acceptance_rate |
+|:------|:---------------|---------:|--------:|-------:|--------:|---------:|---------:|----------:|----------------:|
+| beta0 | MLE            |  -5.2544 |      NA | 0.2573 | -5.7676 |  -4.7587 |   1.0089 |      0.02 |              NA |
+| beta0 | MCMC_MH_univar |       NA | -5.2108 | 0.2550 | -5.6972 |  -4.6921 |   1.0051 |    168.18 |          0.6878 |
+| beta0 | MCMC_MH_bivar  |       NA | -5.2427 | 0.2441 | -5.6235 |  -4.7387 |   0.8848 |    147.29 |          0.4332 |
+| beta1 | MLE            |   0.0367 |      NA | 0.0020 |  0.0329 |   0.0406 |   0.0077 |      0.02 |              NA |
+| beta1 | MCMC_MH_univar |       NA |  0.0363 | 0.0020 |  0.0324 |   0.0401 |   0.0077 |    168.18 |          0.6878 |
+| beta1 | MCMC_MH_bivar  |       NA |  0.0366 | 0.0019 |  0.0327 |   0.0396 |   0.0069 |    147.29 |          0.4332 |
 
 </div>
 

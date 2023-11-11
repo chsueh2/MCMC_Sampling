@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   github_document:
     toc: true
-    df_print: paged
+    df_print: kable
     html_preview: false
   html_document:
     theme: cerulean
@@ -359,7 +359,7 @@ df_univar <- mcmc_mh(
   beta1_init = 0, proposed_sd1 = 0.001) %>% 
   mcmc_summary(burn_in)
 
-df_univar
+df_univar %>% print()
 ```
 
 MCMC takes `r df_univar$proc_time[1]` seconds to complete `r N` iteration in univariate manner. On average, the acceptance rate of candidates drawn from the jumping distributions is `r df_univar$acceptance_rate[1]`.
@@ -381,7 +381,7 @@ summary(fit)
 df_glm <- tidy(fit, conf.int = T) %>% 
   mutate(proc_time = proc_time["elapsed"])
 
-df_glm
+df_glm %>% print()
 ```
 
 The estimates are close to what we obtained using MCMC-MH. Both methods have similar standard deviations and CIs on the parameters. The major difference is the computation time: MCMC takes much longer to execute. 
@@ -469,7 +469,7 @@ df_bivar <- mcmc_mh2(
   beta1_init = 0, proposed_sd1 = 0.001) %>% 
   mcmc_summary(burn_in)
 
-df_bivar
+df_bivar %>% print()
 ```
 
 MCMC takes `r df_bivar$proc_time[1]` seconds to complete `r N` iteration in bivariate manner. On average, the acceptance rate of candidates drawn from the jumping distributions is `r df_bivar$acceptance_rate[1]`, which is lower than the univariate counterpart. This is likely due to the fact that we propose two new candidates for both parameters simultaneously and this has higher chance to enter rejection zone. 
