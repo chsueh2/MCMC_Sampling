@@ -1,7 +1,7 @@
 ---
 title: "MCMC Sampling for a Logistic Regression Model"
 author: "Chien-Lan Hsueh"
-date: "`r Sys.Date()`"
+date: "2022-10-22"
 output:
   github_document:
     toc: true
