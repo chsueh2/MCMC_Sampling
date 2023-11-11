@@ -150,7 +150,7 @@ In this work, we are interested to model the response `Outcome` by `Glucose` wit
 
 $$Y=\log\frac{P(success)}{1-P(success)}=\beta_0+\beta_1 X$$
 
-The likelihood (data) is a product of binomial pdf and the prior distributions for the parameters $\beta_0$ and $\beta_1$ are chosen to be two independent normal distributions $\sim(0, 15^2)$:
+The likelihood (data) is a product of binomial pdf and the prior distributions for the parameters $\beta_0$ and $\beta_1$ are chosen to be two independent normal distributions $\sim N(0, 15^2)$:
 
 
 $$
@@ -164,15 +164,13 @@ f_\underset{\sim}{\beta_0}(\beta_0) f_\underset{\sim}{\beta_1}(\beta_1) \\
 l &= \ln L \\
 &= \sum_{i=1}^n \left[ y_i\ln p(x_i) + (1-y_i)\ln \left(1 - p(x_i)\right) \right] 
 -\frac{1}{2} \left(\ln \sigma_0^2 + \frac{(\beta_0-\beta_{00})^2}{\sigma_0^2} \right)
--\frac{1}{2} \left(\ln \sigma_1^2 + \frac{(\beta_1-\beta_{10})^2}{\sigma_1^2} \right) + \text{constant} \\
-&= \sum\text{log-liklihood of data} + \text{log-prior for }\beta_0 + \text{log-prior for }\beta_1 
-+ \text{constant}  
+-\frac{1}{2} \left(\ln \sigma_1^2 + \frac{(\beta_1-\beta_{10})^2}{\sigma_1^2} \right) + \text{constant} 
 \end{aligned}
 $$
 
 Based on the equations above, we therefore define the following helper functions to calculate the terms needed in MCMC MH algorithm:
 
-- `expit()`: calculate the expit ($p(x_i|\beta_0,\beta_1)$)
+- `expit()`: calculate the expit $p(x_i|\beta_0,\beta_1)$
 - `logprior()`: log prior for $\beta_0 \sim N(0, 15^2)$ or $\beta_1 \sim N(0, 15^2)$
 - `logpost()`: log posterior (the last equation showed above)
 

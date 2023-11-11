@@ -10,7 +10,7 @@ Key features:
 - Jumping Distribution
 - Posterior Means and Standard Deviations
 - Credible Intervals
-- Burn-in Used
+- Burn-in
 
 ## Project Report
 
@@ -24,7 +24,7 @@ Author: Chien-Lan Hsueh (chienlan.hsueh at gmail.com)
 
 Suppose we have independent observations of success or failure. We can use MLE to conduct an inference on $p$. Since the MLEs do not have a closed form solution, we will try to solve using MCMC sampling by allowing for $\beta_0$ and $\beta_1$ to each have normal distribution priors. With the $R$ ratio and the jumping distribution, we implement a MCMC sampler to obtain posterior distributions for the parameters as well as the posterior statistics and their credible intervals. 
 
-Finally, Improve the MCMC algorithm and compare the burn-in used (MCMC MH Bivariate Manner).
+Finally, Improve the MCMC algorithm and compare the burn-in (MCMC MH Bivariate Manner).
 
 ## Part 1 - Load and Summarize Data
 
@@ -36,8 +36,8 @@ Model the response Outcome by Glucose with a logistic linear regression model. c
 
 ## Part 3 - GLM - MLE fit
 
-Compare our MCMC results with GLM fit.
+Check our MCMC results with GLM fit.
 
 ## Part 4 - MCMC MH Bivariate Manner
 
-With the assumption of the independence of the two parameters $\beta_0$ and $\beta_1$, we can improve the MCMC MH algorithm by performing the sampling process in bivariate manner. We can then compare the burn-in used to see how much does it improve.
+With the assumption of the independence of the two parameters $\beta_0$ and $\beta_1$, we can improve the MCMC MH algorithm by performing the sampling process in bivariate manner. We can then compare the burn-in to see how much does it improve.
