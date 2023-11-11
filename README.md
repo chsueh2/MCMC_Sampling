@@ -34,7 +34,7 @@ The diabetes data set is taken from [Kaggle](https://www.kaggle.com/datasets/vik
 
 Model the response Outcome by Glucose with a logistic linear regression model. carry out Markov Chain Monte Carlo (MCMC) Metropolis-Hastings algorithm in a univariate manner (search one parameter at a time).
 
-## Part 3 - GLM - MLE fit
+## Part 3 - GLM - MLE Fit
 
 Check our MCMC results with GLM fit.
 
