@@ -12,13 +12,25 @@ Key features:
 - Credible Intervals
 - Burn-in
 
+R packages used:
+
+- `here`: enables easy file referencing and builds file paths in a OS-independent way
+- `stats`: loads this before loading `tidyverse` to avoid masking some `tidyverse` functions
+- `cumstats`: efficiently computing cumulative standard deviation
+- `tidyverse`: includes collections of useful packages like `dplyr` (data manipulation), `tidyr` (tidying data),  `ggplots` (creating graphs), etc.
+- `skimr`: provide summary statistics about variables in data frames, tibbles, data tables and vectors
+- `glue`: embedding and evaluating R expressions into string to be printed as message
+- `scales`: formats and labels scales nicely for better visualization
+- `broom`: tidy and unify the fit objects returned by most of the modeling functions
+- `TeachingDemos`: empirical HPD intervals
+
 ## Project Report
 
-The analysis results with all theoretical backgrounds and math derivations are included in the [project report](./project2.md) ([R Markdown](./project2.Rmd)).
+[Project report](./project2.md) ([HTML](https://rpubs.com/clh2021/1113694))([R Markdown](./project2.Rmd)).
 
-Original Completion Date: October 22, 2022
+The analysis results with all theoretical backgrounds and math derivations are included. 
 
-Author: Chien-Lan Hsueh (chienlan.hsueh at gmail.com)
+Chien-Lan Hsueh (chienlan.hsueh at gmail.com)
 
 ## Overview and Project Goal
 

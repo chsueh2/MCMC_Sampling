@@ -3,11 +3,17 @@ title: "MCMC Sampling for a Logistic Regression Model"
 author: "Chien-Lan Hsueh"
 date: "2022-10-22"
 output:
+  rmdformats::robobook: 
+    theme: cerulean
+    highlight: haddock
+    code_folding: none
+    df_print: paged
   github_document:
     toc: true
     df_print: kable
     html_preview: false
   html_document:
+    toc: true
     theme: cerulean
     highlight: haddock
     code_folding: none
