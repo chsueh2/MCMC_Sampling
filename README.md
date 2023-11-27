@@ -1,4 +1,5 @@
 # MCMC Sampling for a Logistic Regression Model
+
 Create and implement a Markov chain Monte Carlo (MCMC) sampler in R for a logistic regression model. 
 
 [Project report](https://rpubs.com/clh2021/1113694)
