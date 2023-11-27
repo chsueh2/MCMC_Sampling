@@ -61,7 +61,8 @@ With the assumption of the independence of the two parameters $\beta_0$ and $\be
 
 ![](./images/image1.png)
 
-![](./images/image2png)
+![](./images/image2.png)
 
 ![](./images/image3.png)
+
 ![](./images/image4.png)
