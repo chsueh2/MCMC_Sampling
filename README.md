@@ -29,7 +29,7 @@ R packages used:
 
 ## Project Report
 
-[Project report](https://rpubs.com/clh2021/1113694) ([Github Markdown](./project2.md))([R Markdown](./project2.Rmd))
+[Project report](https://rpubs.com/clh2021/1113694) ([Github Markdown](./project.md))([R Markdown](./project.Rmd))
 
 The analysis results with all theoretical backgrounds and math derivations are included. 
 
@@ -56,3 +56,12 @@ Check our MCMC results with GLM fit.
 ## Part 4 - MCMC MH Bivariate Manner
 
 With the assumption of the independence of the two parameters $\beta_0$ and $\beta_1$, we can improve the MCMC MH algorithm by performing the sampling process in bivariate manner. We can then compare the burn-in to see how much does it improve.
+
+![](./images/comparison.png)
+
+![](./images/image1.png)
+
+![](./images/image2png)
+
+![](./images/image3.png)
+![](./images/image4.png)
