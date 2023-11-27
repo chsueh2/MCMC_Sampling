@@ -1,56 +1,58 @@
----
-title: "MCMC Sampling for a Logistic Regression Model"
-author: "Chien-Lan Hsueh"
-date: "2022-10-22"
-output:
-  github_document:
-    toc: true
-    df_print: kable
-    html_preview: false
-  rmdformats::robobook: 
-    theme: cerulean
-    highlight: haddock
-    code_folding: none
-    df_print: paged
-  html_document:
-    toc: true
-    theme: cerulean
-    highlight: haddock
-    code_folding: none
-    df_print: paged
-  pdf_document:
-    latex_engine: xelatex
-    highlight: haddock
-    df_print: tibble    
----
+MCMC Sampling for a Logistic Regression Model
+================
+Chien-Lan Hsueh
+2022-10-22
+
+- [Packages](#packages)
+- [Data](#data)
+- [MCMC MH Algorithm and
+  Implementation](#mcmc-mh-algorithm-and-implementation)
+- [Simulation and Results](#simulation-and-results)
+- [GLM - MLE fit](#glm---mle-fit)
+- [Additional Study - MCMC MH Bivariate
+  Manner](#additional-study---mcmc-mh-bivariate-manner)
+- [Comparison and Conclusion](#comparison-and-conclusion)
 
 ## Packages
 
 The following packages are used in this project:
 
-- `here`: enables easy file referencing and builds file paths in a OS-independent way
-- `stats`: loads this before loading `tidyverse` to avoid masking some `tidyverse` functions
+- `here`: enables easy file referencing and builds file paths in a
+  OS-independent way
+- `stats`: loads this before loading `tidyverse` to avoid masking some
+  `tidyverse` functions
 - `cumstats`: efficiently computing cumulative standard deviation
-- `tidyverse`: includes collections of useful packages like `dplyr` (data manipulation), `tidyr` (tidying data),  `ggplots` (creating graphs), etc.
-- `skimr`: provide summary statistics about variables in data frames, tibbles, data tables and vectors
-- `glue`: embedding and evaluating R expressions into string to be printed as message
+- `tidyverse`: includes collections of useful packages like `dplyr`
+  (data manipulation), `tidyr` (tidying data), `ggplots` (creating
+  graphs), etc.
+- `skimr`: provide summary statistics about variables in data frames,
+  tibbles, data tables and vectors
+- `glue`: embedding and evaluating R expressions into string to be
+  printed as message
 - `scales`: formats and labels scales nicely for better visualization
-- `broom`: tidy and unify the fit objects returned by most of the modeling functions
+- `broom`: tidy and unify the fit objects returned by most of the
+  modeling functions
 - `TeachingDemos`: empirical HPD intervals
 
-In addition, the `pacman` package provides handy tools to manage R packages (install, update, load and unload). We use its `p_laod()` instead of `libarary()` to load the packages listed above. 
+In addition, the `pacman` package provides handy tools to manage R
+packages (install, update, load and unload). We use its `p_laod()`
+instead of `libarary()` to load the packages listed above.
 
-```{r}
+``` r
 # packages
 if (!require("pacman")) utils::install.packages("pacman", dependencies = TRUE)
+```
 
+    ## Loading required package: pacman
+
+``` r
 pacman::p_load(
-	here,
-	stats, cumstats,
-	tidyverse, 
-	skimr, glue, scales, gt,
-	broom, 
-	TeachingDemos
+    here,
+    stats, cumstats,
+    tidyverse, 
+    skimr, glue, scales, gt,
+    broom, 
+    TeachingDemos
 )
 
 # helper function: string concatenation (ex: "act" %&% "5")
@@ -60,7 +62,11 @@ pacman::p_load(
 '%notin%' <- Negate('%in%')
 ```
 
-In this work, we reuse one of the helper function we developed before `dist_summary`. It conveniently gives graphical (histogram) and numeric summaries (mean, median, standard deviation and confidence intervals) of a distribution from a vector. In this updated version, we add the credible intervals by using `TeachingDemos::CI_hpd()`.
+In this work, we reuse one of the helper function we developed before
+`dist_summary`. It conveniently gives graphical (histogram) and numeric
+summaries (mean, median, standard deviation and confidence intervals) of
+a distribution from a vector. In this updated version, we add the
+credible intervals by using `TeachingDemos::CI_hpd()`.
 
 > Arguments:
 >
@@ -73,7 +79,7 @@ In this work, we reuse one of the helper function we developed before `dist_summ
 >
 > Returned Value: A data frame with numeric summaries
 
-```{r}
+``` r
 # summarize a distribution (graphically and numerically)
 dist_summary <- function(
     x, var_expression,
@@ -134,30 +140,65 @@ dist_summary <- function(
 
 ## Data
 
-Load the data and have a quick look at it to check its summary, data type and completeness:
+Load the data and have a quick look at it to check its summary, data
+type and completeness:
 
-```{r}
+``` r
 diabetes <- read_csv("diabetes-dataset.csv", show_col_types = F)
 
 # skim the data 
 skim(diabetes)
 ```
 
-There is no missing values in any column. The response variable `Outcome` is numeric and has two possible values.
+|                                                  |          |
+|:-------------------------------------------------|:---------|
+| Name                                             | diabetes |
+| Number of rows                                   | 2000     |
+| Number of columns                                | 9        |
+| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_   |          |
+| Column type frequency:                           |          |
+| numeric                                          | 9        |
+| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ |          |
+| Group variables                                  | None     |
 
-```{r}
+Data summary
+
+**Variable type: numeric**
+
+| skim_variable            | n_missing | complete_rate |   mean |     sd |    p0 |   p25 |    p50 |    p75 |   p100 | hist  |
+|:-------------------------|----------:|--------------:|-------:|-------:|------:|------:|-------:|-------:|-------:|:------|
+| Pregnancies              |         0 |             1 |   3.70 |   3.31 |  0.00 |  1.00 |   3.00 |   6.00 |  17.00 | ▇▃▂▁▁ |
+| Glucose                  |         0 |             1 | 121.18 |  32.07 |  0.00 | 99.00 | 117.00 | 141.00 | 199.00 | ▁▁▇▆▂ |
+| BloodPressure            |         0 |             1 |  69.15 |  19.19 |  0.00 | 63.50 |  72.00 |  80.00 | 122.00 | ▁▁▇▇▁ |
+| SkinThickness            |         0 |             1 |  20.93 |  16.10 |  0.00 |  0.00 |  23.00 |  32.00 | 110.00 | ▇▇▁▁▁ |
+| Insulin                  |         0 |             1 |  80.25 | 111.18 |  0.00 |  0.00 |  40.00 | 130.00 | 744.00 | ▇▂▁▁▁ |
+| BMI                      |         0 |             1 |  32.19 |   8.15 |  0.00 | 27.37 |  32.30 |  36.80 |  80.60 | ▁▇▇▁▁ |
+| DiabetesPedigreeFunction |         0 |             1 |   0.47 |   0.32 |  0.08 |  0.24 |   0.38 |   0.62 |   2.42 | ▇▃▁▁▁ |
+| Age                      |         0 |             1 |  33.09 |  11.79 | 21.00 | 24.00 |  29.00 |  40.00 |  81.00 | ▇▃▁▁▁ |
+| Outcome                  |         0 |             1 |   0.34 |   0.47 |  0.00 |  0.00 |   0.00 |   1.00 |   1.00 | ▇▁▁▁▅ |
+
+There is no missing values in any column. The response variable
+`Outcome` is numeric and has two possible values.
+
+``` r
 # count table for the response variable
 table(diabetes$Outcome)
 ```
 
+    ## 
+    ##    0    1 
+    ## 1316  684
+
 ## MCMC MH Algorithm and Implementation
 
-In this work, we are interested to model the response `Outcome` by `Glucose` with a logistic linear regression model:
+In this work, we are interested to model the response `Outcome` by
+`Glucose` with a logistic linear regression model:
 
 $$Y=\log\frac{P(success)}{1-P(success)}=\beta_0+\beta_1 X$$
 
-The likelihood (data) is a product of binomial pdf and the prior distributions for the parameters $\beta_0$ and $\beta_1$ are chosen to be two independent normal distributions $\sim N(0, 15^2)$:
-
+The likelihood (data) is a product of binomial pdf and the prior
+distributions for the parameters $\beta_0$ and $\beta_1$ are chosen to
+be two independent normal distributions $\sim N(0, 15^2)$:
 
 $$
 \begin{aligned}
@@ -174,13 +215,15 @@ l &= \ln L \\
 \end{aligned}
 $$
 
-Based on the equations above, we therefore define the following helper functions to calculate the terms needed in MCMC MH algorithm:
+Based on the equations above, we therefore define the following helper
+functions to calculate the terms needed in MCMC MH algorithm:
 
 - `expit()`: calculate the expit $p(x_i|\beta_0,\beta_1)$
-- `logprior()`: log prior for $\beta_0 \sim N(0, 15^2)$ or $\beta_1 \sim N(0, 15^2)$
+- `logprior()`: log prior for $\beta_0 \sim N(0, 15^2)$ or
+  $\beta_1 \sim N(0, 15^2)$
 - `logpost()`: log posterior (the last equation showed above)
 
-```{r}
+``` r
 # calculate p
 expit <- function(X, beta0, beta1) {
   return( 1/(1 + exp(-beta0 - beta1*X)) )
@@ -198,24 +241,30 @@ logpost <- function(Y, X, beta0, beta1){
 }
 ```
 
-Next we define a sampler function to carry out Markov Chain Monte Carlo (MCMC) Metropolis-Hastings algorithm in a **univariate** manner (search one parameter at a time). To compare the performance, we also keep track of the process time `proc_time` and if a proposed candidate is accepted `accept`. In each iteration:
+Next we define a sampler function to carry out Markov Chain Monte Carlo
+(MCMC) Metropolis-Hastings algorithm in a **univariate** manner (search
+one parameter at a time). To compare the performance, we also keep track
+of the process time `proc_time` and if a proposed candidate is accepted
+`accept`. In each iteration:
 
 - if both candidates are accepted, `accept = 1` (100% acceptance)
 - if only one is accepted, `accept = 0.5` (50% acceptance)
 - if none is accepted, `accept = 0`
 
 > Arguments:
-> 
+>
 > - `Y`, `X`: response and prediction variables
 > - `N`: number of MCMC iteration
 > - `beta0_init` and `beta0_init`: initial values of the parameters
 > - `pos_x`, `pos_y`, `adj`: position of text annotation on the plot
-> - `proposed_sd0` and `proposed_sd1`: standard deviation of jumping distribution for parameter candidates
+> - `proposed_sd0` and `proposed_sd1`: standard deviation of jumping
+>   distribution for parameter candidates
 > - `seed`: seed for random number generator
 >
-> Returned Value: A data frame with all sampled values of the parameters, process time and acceptance indicator
+> Returned Value: A data frame with all sampled values of the
+> parameters, process time and acceptance indicator
 
-```{r}
+``` r
 # MCMC MH sampler - univariate manner
 mcmc_mh <- function(
     Y, X, N = 1000 * 10, 
@@ -294,16 +343,21 @@ mcmc_mh <- function(
 }
 ```
 
-The following helper function is to summarized sampled values returned by MCMC sampler function. It creates several plots to show how algorithm is executed (steps, process time and acceptance rate) as well as a summary report on obtained beta values (posterior mean, median and credible intervals):
+The following helper function is to summarized sampled values returned
+by MCMC sampler function. It creates several plots to show how algorithm
+is executed (steps, process time and acceptance rate) as well as a
+summary report on obtained beta values (posterior mean, median and
+credible intervals):
 
 > Arguments:
 >
 > - `df`: a data frame with all sampled values
 > - `burn_in`: number of burn_in iteration to remove
 >
-> Returned Value: A data frame with posterior mean, median and credible intervals
+> Returned Value: A data frame with posterior mean, median and credible
+> intervals
 
-```{r}
+``` r
 mcmc_summary <- function(df, burn_in, ...){
   # add cumulative mean of acceptance (acceptance rate)
   df <- mutate(df, cum_accept_rate = cummean(accept))
@@ -349,32 +403,58 @@ mcmc_summary <- function(df, burn_in, ...){
 
 ## Simulation and Results
 
-```{r}
+``` r
 # simulation setup
 N <- 1000 * 100
 burn_in <- N/10
 ```
 
-We use the sampler function `mcmc_mh()` to perform MCMC MH with $(0,0)$ as starting values and (0.01, 0.001) as proposed standard deviation of the jumping distribution for $(\beta_0, \beta_1)$ respectively. After plotting the algorithm steps, process time and accumulative acceptance rate, we call `mcmc_summary()` to remove the burn-in rows and plot histograms and summarize the posterior mean, median and credible intervals:
+We use the sampler function `mcmc_mh()` to perform MCMC MH with $(0,0)$
+as starting values and (0.01, 0.001) as proposed standard deviation of
+the jumping distribution for $(\beta_0, \beta_1)$ respectively. After
+plotting the algorithm steps, process time and accumulative acceptance
+rate, we call `mcmc_summary()` to remove the burn-in rows and plot
+histograms and summarize the posterior mean, median and credible
+intervals:
 
-```{r, cache=TRUE}
+``` r
 # MCMC MH  - univariate manner
 df_univar <- mcmc_mh(
   Y = diabetes$Outcome, X = diabetes$Glucose, N = N,
   beta0_init = 0, proposed_sd0 = 0.01, 
   beta1_init = 0, proposed_sd1 = 0.001) %>% 
   mcmc_summary(burn_in)
+```
 
+    ## Last values: (beta0, beta1) = (-5.52522334113172, 0.0390173084051903)
+    ## Process time [s]: 185.41
+    ## Acceptance rate: 0.68779
+
+![](project_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->![](project_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+
+``` r
 df_univar
 ```
 
-MCMC takes `r df_univar$proc_time[1]` seconds to complete `r N` iteration in univariate manner. On average, the acceptance rate of candidates drawn from the jumping distributions is `r df_univar$acceptance_rate[1]`.
+<div class="kable-table">
+
+| term  |       mean |     median |        sd |    CI_2.5% |   CI_97.5% | CI_hpd_2.5% | CI_hpd_97.5% | proc_time | acceptance_rate |
+|:------|-----------:|-----------:|----------:|-----------:|-----------:|------------:|-------------:|----------:|----------------:|
+| beta0 | -5.1960801 | -5.2108115 | 0.2549691 | -5.6972460 | -4.6921111 |  -5.7505870 |   -4.7505961 |    185.41 |         0.68779 |
+| beta1 |  0.0362593 |  0.0363456 | 0.0019601 |  0.0324064 |  0.0401056 |   0.0327338 |    0.0403568 |    185.41 |         0.68779 |
+
+</div>
+
+MCMC takes 185.41 seconds to complete 10^{5} iteration in univariate
+manner. On average, the acceptance rate of candidates drawn from the
+jumping distributions is 0.68779.
 
 ## GLM - MLE fit
 
-To get an idea about how good our obtained results, we use `glm()` to fit the logistic regression model (maximum likelihood method): 
+To get an idea about how good our obtained results, we use `glm()` to
+fit the logistic regression model (maximum likelihood method):
 
-```{r}
+``` r
 # fit a GLM logistic regression model
 proc_timer <- proc.time()
 fit <- glm(Outcome ~ Glucose, family = binomial(link = 'logit'), data = diabetes)
@@ -382,7 +462,29 @@ proc_time <- proc.time() - proc_timer
 
 # summary           
 summary(fit)
+```
 
+    ## 
+    ## Call:
+    ## glm(formula = Outcome ~ Glucose, family = binomial(link = "logit"), 
+    ##     data = diabetes)
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept) -5.254362   0.257281  -20.42   <2e-16 ***
+    ## Glucose      0.036696   0.001973   18.60   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 2569.4  on 1999  degrees of freedom
+    ## Residual deviance: 2108.1  on 1998  degrees of freedom
+    ## AIC: 2112.1
+    ## 
+    ## Number of Fisher Scoring iterations: 4
+
+``` r
 # estimate, SE and 95% CI
 df_glm <- tidy(fit, conf.int = T) %>% 
   mutate(proc_time = proc_time["elapsed"])
@@ -390,13 +492,25 @@ df_glm <- tidy(fit, conf.int = T) %>%
 df_glm
 ```
 
-The estimates are close to what we obtained using MCMC-MH. Both methods have similar standard deviations and CIs on the parameters. The major difference is the computation time: MCMC takes much longer to execute. 
+<div class="kable-table">
+
+| term        |   estimate | std.error | statistic | p.value |   conf.low |  conf.high | proc_time |
+|:------------|-----------:|----------:|----------:|--------:|-----------:|-----------:|----------:|
+| (Intercept) | -5.2543619 | 0.2572807 | -20.42269 |       0 | -5.7676165 | -4.7586725 |         0 |
+| Glucose     |  0.0366957 | 0.0019728 |  18.60096 |       0 |  0.0328929 |  0.0406296 |         0 |
+
+</div>
+
+The estimates are close to what we obtained using MCMC-MH. Both methods
+have similar standard deviations and CIs on the parameters. The major
+difference is the computation time: MCMC takes much longer to execute.
 
 ## Additional Study - MCMC MH Bivariate Manner
 
-With the assumption of the independence of the two parameters $\beta_0$ and $\beta_1$, we can perform the sampling process in bivariate manner:
+With the assumption of the independence of the two parameters $\beta_0$
+and $\beta_1$, we can perform the sampling process in bivariate manner:
 
-```{r}
+``` r
 # MCMC MH sampler - bivariate manner
 mcmc_mh2 <- function(
     Y, X, N = 1000 * 10, 
@@ -465,22 +579,45 @@ mcmc_mh2 <- function(
 }
 ```
 
-For a fair comparison, we use the same setup to execute the sampler function `mcmc_mh2()`: 
+For a fair comparison, we use the same setup to execute the sampler
+function `mcmc_mh2()`:
 
-```{r, cache=TRUE}
+``` r
 # MCMC MH - bivariate manner
 df_bivar <- mcmc_mh2(
   Y = diabetes$Outcome, X = diabetes$Glucose, N = N,
   beta0_init = 0, proposed_sd0 = 0.01, 
   beta1_init = 0, proposed_sd1 = 0.001) %>% 
   mcmc_summary(burn_in)
+```
 
+    ## Last values: (beta0, beta1) = (-4.95027052778182, 0.0346536657845713)
+    ## Process time [s]: 170.64
+    ## Acceptance rate: 0.43319
+
+![](project_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->![](project_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
+
+``` r
 df_bivar
 ```
 
-MCMC takes `r df_bivar$proc_time[1]` seconds to complete `r N` iteration in bivariate manner. On average, the acceptance rate of candidates drawn from the jumping distributions is `r df_bivar$acceptance_rate[1]`, which is lower than the univariate counterpart. This is likely due to the fact that we propose two new candidates for both parameters simultaneously and this has higher chance to enter rejection zone. 
+<div class="kable-table">
 
-```{r}
+| term  |       mean |     median |        sd |    CI_2.5% |  CI_97.5% | CI_hpd_2.5% | CI_hpd_97.5% | proc_time | acceptance_rate |
+|:------|-----------:|-----------:|----------:|-----------:|----------:|------------:|-------------:|----------:|----------------:|
+| beta0 | -5.2086552 | -5.2426784 | 0.2441072 | -5.6234894 | -4.738681 |   -5.618165 |    -4.734866 |    170.64 |         0.43319 |
+| beta1 |  0.0363547 |  0.0365767 | 0.0018748 |  0.0326706 |  0.039571 |    0.032736 |     0.039622 |    170.64 |         0.43319 |
+
+</div>
+
+MCMC takes 170.64 seconds to complete 10^{5} iteration in bivariate
+manner. On average, the acceptance rate of candidates drawn from the
+jumping distributions is 0.43319, which is lower than the univariate
+counterpart. This is likely due to the fact that we propose two new
+candidates for both parameters simultaneously and this has higher chance
+to enter rejection zone.
+
+``` r
 # A naive way to compare efficiency of process time usage
 glue(
   "Process Time Wasted [s] := Process Time * (1 - Acceptance Rate)\n",
@@ -489,13 +626,18 @@ glue(
 )
 ```
 
-Beside this downside, the results are slightly better in term of smaller standard deviation and narrower CI.
+    ## Process Time Wasted [s] := Process Time * (1 - Acceptance Rate)
+    ## MCMC-MH univariate: 57.89 [s]
+    ## MCMC-MH bivariate:  96.72 [s]
+
+Beside this downside, the results are slightly better in term of smaller
+standard deviation and narrower CI.
 
 ## Comparison and Conclusion
 
 To compare all three methods:
 
-```{r}
+``` r
 # combine all results for comparison
 bind_rows(
   # from glm
@@ -521,4 +663,20 @@ bind_rows(
   arrange(term)
 ```
 
-All three methods have similar values for parameters. Although MCMC-MH bivariate method is faster and slightly better (in term of sd and CI) than MCMC-MH univariate method, it is still much slower than MLE fit (maximum likelihood method). 
+<div class="kable-table">
+
+| term  | method         | estimate |  median |     sd | CI_2.5% | CI_97.5% | CI_width | proc_time | acceptance_rate |
+|:------|:---------------|---------:|--------:|-------:|--------:|---------:|---------:|----------:|----------------:|
+| beta0 | MLE            |  -5.2544 |      NA | 0.2573 | -5.7676 |  -4.7587 |   1.0089 |      0.00 |              NA |
+| beta0 | MCMC_MH_univar |       NA | -5.2108 | 0.2550 | -5.6972 |  -4.6921 |   1.0051 |    185.41 |          0.6878 |
+| beta0 | MCMC_MH_bivar  |       NA | -5.2427 | 0.2441 | -5.6235 |  -4.7387 |   0.8848 |    170.64 |          0.4332 |
+| beta1 | MLE            |   0.0367 |      NA | 0.0020 |  0.0329 |   0.0406 |   0.0077 |      0.00 |              NA |
+| beta1 | MCMC_MH_univar |       NA |  0.0363 | 0.0020 |  0.0324 |   0.0401 |   0.0077 |    185.41 |          0.6878 |
+| beta1 | MCMC_MH_bivar  |       NA |  0.0366 | 0.0019 |  0.0327 |   0.0396 |   0.0069 |    170.64 |          0.4332 |
+
+</div>
+
+All three methods have similar values for parameters. Although MCMC-MH
+bivariate method is faster and slightly better (in term of sd and CI)
+than MCMC-MH univariate method, it is still much slower than MLE fit
+(maximum likelihood method).
